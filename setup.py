@@ -15,7 +15,9 @@ install_requires = [
     'hatak_statics',
     'waitress',
     'uwsgi',
-
+    'pytest',
+    'pytest-cov',
+    'coverage==3.7.1',
 ]
 dependency_links = [
 
