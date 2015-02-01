@@ -2,16 +2,15 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.2.3',
+    'hatak==0.2.7',
     'coverage',
     'hatak_logging',
     'hatak_jinja2',
     'hatak_haml',
-    'hatak_sql',
+    'hatak_sql>=0.1.6',
     'hatak_alembic',
     'hatak_beaker',
     'hatak_debugtoolbar',
-    'hatak_toster',
     'hatak_statics',
     'waitress',
     'uwsgi',
