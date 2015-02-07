@@ -1,5 +1,6 @@
 from haplugin.sql import Base
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 class StatusBased(object):
@@ -26,7 +27,28 @@ class Game(Base, StatusBased):
     __tablename__ = 'games'
 
     id = Column(Integer, primary_key=True)
-    match_number = Column(Integer)
+    index = Column(Integer)
     date = Column(DateTime)
 
+    left_team_id = Column(
+        Integer, ForeignKey('teams.id'), nullable=False)
+    left_team = relationship(
+        "Team", primaryjoin='Game.left_team_id==Team.id')
+    right_team_id = Column(
+        Integer, ForeignKey('teams.id'), nullable=False)
+    right_team = relationship(
+        "Team", primaryjoin='Game.right_team_id==Team.id')
+
     _status = Column(String, default='not started')
+
+
+class Quart(Base):
+    __tablename__ = 'quarts'
+
+    id = Column(Integer, primary_key=True)
+    index = Column(Integer, nullable=False)
+    left_score = Column(Integer)
+    right_score = Column(Integer)
+
+    game_id = Column(Integer, ForeignKey('games.id'), nullable=False)
+    game = relationship("Game", backref='quarts')
