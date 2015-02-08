@@ -11,7 +11,14 @@ from basket.games.models import Game
 
 class Fixtures(BaseFixtures):
     users = [
-        {'name': 'Socek'},
+        {
+            'name': 'Socek',
+            'email': 'msocek@gmail.com',
+            'password': (
+                '08d94068d7dd5f83ebb7b008250f904b188ba14ce41851bb779d92cf843db'
+                '12cdd43a17b2db8aeb2'
+            ),
+        },
         {'name': 'Darek'},
         {'name': 'Marek'},
     ]
@@ -252,3 +259,9 @@ class Fixtures(BaseFixtures):
 def fixtures(db, app):
     print("Creating fixtures...")
     return Fixtures(db, app).create_all()
+
+
+def create_fixtures(registry):
+    from basket.application.init import main
+    db = registry['db']
+    return Fixtures(db, main).create_all()
