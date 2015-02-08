@@ -21,7 +21,7 @@ def upgrade():
         'teams',
         Column('id', Integer, primary_key=True),
         Column('name', String(), nullable=False),
-        Column('hometown', String(), nullable=False),
+        Column('hometown', String()),
     )
 
 

@@ -17,6 +17,9 @@ install_requires = [
     'pytest',
     'pytest-cov',
     'coverage==3.7.1',
+    'hatak_auth>=0.2.2.1',
+    'ipdb',
+    'psycopg2',
 ]
 dependency_links = [
 

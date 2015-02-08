@@ -7,4 +7,4 @@ class Team(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    hometown = Column(String, nullable=False)
+    hometown = Column(String)

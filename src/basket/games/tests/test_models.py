@@ -1,6 +1,9 @@
-from pytest import fixture, raises
+from pytest import fixture, raises, yield_fixture
+from mock import MagicMock, patch, call
 
-from ..models import StatusBased
+from haplugin.sql.testing import DatabaseFixture
+
+from ..models import StatusBased, Game, Quart
 
 
 class TestStatusBased(object):
@@ -32,3 +35,79 @@ class TestStatusBased(object):
         """
         with raises(ValueError):
             status.status = 'wrong value'
+
+
+class TestGameCreation(DatabaseFixture):
+
+    @fixture
+    def game(self):
+        return Game()
+
+    @fixture
+    def mdb(self):
+        return MagicMock()
+
+    @yield_fixture
+    def mquarts(self, game):
+        patcher = patch.object(game, 'quarts', [MagicMock()])
+        with patcher as mock:
+            yield mock
+
+    @yield_fixture
+    def mcreate_dependencies(self, game):
+        patcher = patch.object(game, 'create_dependencies')
+        with patcher as mock:
+            yield mock
+
+    def test_create_dependencies(self, game, db, fixtures):
+        """
+        .create_dependencies should create missing quarts.
+        """
+        game.left_team = fixtures['Team']['Przyjaciele Szymon']
+        game.right_team = fixtures['Team']['TG Team']
+        game.index = 10
+        quart = Quart()
+        quart.index = 2
+        quart.game = game
+        quart.left_score = 10
+        db.add(quart)
+        db.commit()
+
+        game.add_to_db_session(db)
+        db.commit()
+
+        assert game.quarts[0].index == 0
+
+        assert game.quarts[1].index == 1
+
+        assert game.quarts[2].index == 2
+        assert game.quarts[2].left_score == 10
+
+        assert game.quarts[3].index == 3
+
+        game.delete(db)
+        db.commit()
+
+    def test_add_to_db_session(self, game, mdb, mcreate_dependencies):
+        """
+        .add_to_db_session should add all quarts and itself to db
+        """
+        mquart = MagicMock()
+        mcreate_dependencies.return_value = [mquart]
+
+        game.add_to_db_session(mdb)
+
+        mcreate_dependencies.assert_called_once_with()
+        assert call(mquart) == mdb.add.call_args_list[0]
+        assert call(game) == mdb.add.call_args_list[1]
+
+    def test_delete(self, game, mdb, mquarts):
+        """
+        .delete should delete all quarts and the game itself
+        """
+        mquart = mquarts[0]
+
+        game.delete(mdb)
+
+        assert call(mquart) == mdb.delete.call_args_list[0]
+        assert call(game) == mdb.delete.call_args_list[1]

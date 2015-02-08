@@ -25,6 +25,7 @@ class StatusBased(object):
 
 class Game(Base, StatusBased):
     __tablename__ = 'games'
+    _quarts = 4
 
     id = Column(Integer, primary_key=True)
     index = Column(Integer)
@@ -38,8 +39,30 @@ class Game(Base, StatusBased):
         Integer, ForeignKey('teams.id'), nullable=False)
     right_team = relationship(
         "Team", primaryjoin='Game.right_team_id==Team.id')
+    quarts = relationship("Quart", order_by="Quart.index")
 
     _status = Column(String, default='not started')
+
+    def create_dependencies(self):
+        needed_quarts = list(range(self._quarts))
+        for quart in self.quarts:
+            needed_quarts.remove(quart.index)
+
+        for index in needed_quarts:
+            quart = Quart()
+            quart.index = index
+            quart.game = self
+            yield quart
+
+    def add_to_db_session(self, db):
+        for quart in self.create_dependencies():
+            db.add(quart)
+        db.add(self)
+
+    def delete(self, db):
+        for quart in self.quarts:
+            db.delete(quart)
+        db.delete(self)
 
 
 class Quart(Base):
@@ -51,4 +74,4 @@ class Quart(Base):
     right_score = Column(Integer)
 
     game_id = Column(Integer, ForeignKey('games.id'), nullable=False)
-    game = relationship("Game", backref='quarts')
+    game = relationship("Game")

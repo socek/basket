@@ -8,6 +8,7 @@ from haplugin.alembic import AlembicPlugin
 from haplugin.beaker import BeakerPlugin
 from haplugin.debugtoolbar import DebugtoolbarPlugin
 from haplugin.statics.plugin import StaticPlugin
+from haplugin.auth import AuthPlugin
 
 from .routes import make_routes
 
@@ -20,3 +21,4 @@ main.add_plugin(AlembicPlugin())
 main.add_plugin(BeakerPlugin())
 main.add_plugin(DebugtoolbarPlugin())
 main.add_plugin(StaticPlugin())
+main.add_plugin(AuthPlugin())
