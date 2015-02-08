@@ -31,14 +31,16 @@ class Game(Base, StatusBased):
     index = Column(Integer)
     date = Column(DateTime)
 
-    left_team_id = Column(
-        Integer, ForeignKey('teams.id'), nullable=False)
+    left_team_id = Column(Integer, ForeignKey('teams.id'))
     left_team = relationship(
         "Team", primaryjoin='Game.left_team_id==Team.id')
-    right_team_id = Column(
-        Integer, ForeignKey('teams.id'), nullable=False)
+    right_team_id = Column(Integer, ForeignKey('teams.id'))
     right_team = relationship(
         "Team", primaryjoin='Game.right_team_id==Team.id')
+
+    group_id = Column(Integer, ForeignKey('groups.id'), nullable=False)
+    group = relationship("Group", backref="games")
+
     quarts = relationship("Quart", order_by="Quart.index")
 
     _status = Column(String, default='not started')

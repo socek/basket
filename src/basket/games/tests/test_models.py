@@ -66,6 +66,7 @@ class TestGameCreation(DatabaseFixture):
         game.left_team = fixtures['Team']['Przyjaciele Szymon']
         game.right_team = fixtures['Team']['TG Team']
         game.index = 10
+        game.group = fixtures['Group']['Grupa A']
         quart = Quart()
         quart.index = 2
         quart.game = game

@@ -22,10 +22,9 @@ def upgrade():
         Column('id', Integer, primary_key=True),
         Column('index', Integer),
         Column('date', DateTime),
-        Column(
-            'left_team_id', Integer, ForeignKey('teams.id'), nullable=False),
-        Column(
-            'right_team_id', Integer, ForeignKey('teams.id'), nullable=False),
+        Column('left_team_id', Integer, ForeignKey('teams.id')),
+        Column('right_team_id', Integer, ForeignKey('teams.id')),
+        Column('group_id', Integer, ForeignKey('groups.id'), nullable=False),
         Column('_status', String, default='not started')
     )
 
