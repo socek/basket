@@ -2,6 +2,10 @@ from haplugin.sql import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
+from basket.teams.models import Team
+from basket.groups.models import Group
+from basket.place.models import Place
+
 
 class StatusBased(object):
 
@@ -32,14 +36,16 @@ class Game(Base, StatusBased):
     date = Column(DateTime)
 
     left_team_id = Column(Integer, ForeignKey('teams.id'))
-    left_team = relationship(
-        "Team", primaryjoin='Game.left_team_id==Team.id')
+    left_team = relationship(Team, primaryjoin=left_team_id == Team.id)
+
     right_team_id = Column(Integer, ForeignKey('teams.id'))
-    right_team = relationship(
-        "Team", primaryjoin='Game.right_team_id==Team.id')
+    right_team = relationship(Team, primaryjoin=right_team_id == Team.id)
 
     group_id = Column(Integer, ForeignKey('groups.id'), nullable=False)
-    group = relationship("Group", backref="games")
+    group = relationship(Group, backref="games")
+
+    place_id = Column(Integer, ForeignKey('places.id'))
+    place = relationship(Place)
 
     quarts = relationship("Quart", order_by="Quart.index")
 
@@ -65,6 +71,42 @@ class Game(Base, StatusBased):
         for quart in self.quarts:
             db.delete(quart)
         db.delete(self)
+
+    def get_report(self):
+        data = {
+            'index': self.index,
+            'date': self.date,
+            'status': self.status,
+            'group_name': self.group.name,
+            'place': self.place.name,
+        }
+        if self.left_team:
+            data['left'] = {
+                'team': self.left_team.name,
+                'quarts': [
+                    quart.left_score for quart in self.quarts
+                ]
+            }
+        else:
+            data['left'] = {
+                'team': '',
+                'quarts': [None, None, None, None],
+            }
+        if self.right_team:
+            data['right'] = {
+                'team': self.right_team.name,
+                'quarts': [
+                    quart.right_score for quart in self.quarts
+                ]
+            }
+        else:
+            data['right'] = {
+                'team': '',
+                'quarts': [None, None, None, None],
+            }
+        data['left']['sum'] = sum(filter(None, data['left']['quarts']))
+        data['right']['sum'] = sum(filter(None, data['right']['quarts']))
+        return data
 
 
 class Quart(Base):

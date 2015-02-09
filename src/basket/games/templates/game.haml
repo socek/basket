@@ -1,0 +1,40 @@
+%div.match
+  = state() | safe
+
+  %div.place
+    = report['place']
+
+  = group() | safe
+
+  %table.scores
+    %tbody
+      %tr
+        %td.teamname
+          Drużyna
+        %td
+          Kwarta 1
+        %td
+          Kwarta 2
+        %td
+          Kwarta 3
+        %td
+          Kwarta 4
+        %td
+          Wynik
+      %tr
+        %td.teamname
+          = report['left']['team']
+        -for quart in report['left']['quarts']
+          %td
+            =quart or ''
+        %td
+          = report['left']['sum']
+
+      %tr
+        %td.teamname
+          = report['right']['team']
+        -for quart in report['right']['quarts']
+          %td
+            =quart or ''
+        %td
+          = report['right']['sum']

@@ -1,0 +1,9 @@
+-extends "main.jinja2"
+
+-block page_head
+  Wszystkie mecze
+
+
+-block content
+  -for game in games
+    =game()

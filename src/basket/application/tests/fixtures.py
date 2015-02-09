@@ -7,6 +7,7 @@ from basket.auth.models import User
 from basket.teams.models import Team
 from basket.groups.models import Group
 from basket.games.models import Game
+from basket.place.models import Place
 
 
 class Fixtures(BaseFixtures):
@@ -50,10 +51,18 @@ class Fixtures(BaseFixtures):
         {'name': 'Finały'},
     ]
 
+    P_TG = 'Hala Sportowa Tarnowskie Góry'
+    P_RADZIONKOW = 'Hala MOSiR Radzionków'
+    places = [
+        {'name': P_TG},
+        {'name': P_RADZIONKOW},
+    ]
+
     def make_all(self):
         self.create_dict(User, self.users)
         self.create_dict(Team, self.teams)
         self.create_dict(Group, self.groups)
+        self.create_dict(Place, self.places)
         self.create_games()
 
     def create_dict(self, cls, data):
@@ -72,6 +81,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_KKS],
             date=datetime(2015, 3, 5, 17, 30),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -80,6 +90,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_BEKESCABA],
             date=datetime(2015, 3, 5, 19, 00),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -88,6 +99,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_TGTEAM],
             date=datetime(2015, 3, 5, 19, 00),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -96,6 +108,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_OLIMPIA],
             date=datetime(2015, 3, 6, 9, 30),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -104,6 +117,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_KUTNA],
             date=datetime(2015, 3, 6, 11, 00),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -112,6 +126,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_OLIMPIA],
             date=datetime(2015, 3, 6, 12, 30),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -120,6 +135,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_PRZYJACIELE],
             date=datetime(2015, 3, 6, 14, 00),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -128,6 +144,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_OLIMPIA],
             date=datetime(2015, 3, 6, 15, 30),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -136,6 +153,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_PRZYJACIELE],
             date=datetime(2015, 3, 6, 17, 00),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -144,6 +162,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_KUTNA],
             date=datetime(2015, 3, 6, 18, 30),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -152,6 +171,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_BEKESCABA],
             date=datetime(2015, 3, 6, 20, 00),
             group=self.fixtures['Group']['Grupa A'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
@@ -160,6 +180,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_BOGUSZOW],
             date=datetime(2015, 3, 6, 8, 00),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -168,6 +189,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_FIT],
             date=datetime(2015, 3, 6, 9, 30),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -176,6 +198,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_TGTEAM],
             date=datetime(2015, 3, 6, 11, 00),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -184,6 +207,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_FIT],
             date=datetime(2015, 3, 6, 13, 00),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -192,6 +216,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_LUBLINIEC],
             date=datetime(2015, 3, 6, 14, 30),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -200,6 +225,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_FIT],
             date=datetime(2015, 3, 6, 16, 00),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -208,6 +234,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_LUBLINIEC],
             date=datetime(2015, 3, 6, 17, 30),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -216,6 +243,7 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_TGTEAM],
             date=datetime(2015, 3, 6, 19, 00),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
@@ -224,30 +252,35 @@ class Fixtures(BaseFixtures):
             right_team=self.fixtures['Team'][self.T_LUBLINIEC],
             date=datetime(2015, 3, 6, 20, 30),
             group=self.fixtures['Group']['Grupa B'],
+            place=self.fixtures['Place'][self.P_RADZIONKOW],
         )
 
         self._create_game(
             index=20,
             date=datetime(2015, 3, 7, 10, 00),
             group=self.fixtures['Group']['Finały'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
             index=21,
             date=datetime(2015, 3, 7, 12, 00),
             group=self.fixtures['Group']['Finały'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
             index=22,
             date=datetime(2015, 3, 7, 15, 00),
             group=self.fixtures['Group']['Finały'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
         self._create_game(
             index=23,
             date=datetime(2015, 3, 7, 16, 30),
             group=self.fixtures['Group']['Finały'],
+            place=self.fixtures['Place'][self.P_TG],
         )
 
     def _create_game(self, **kwargs):

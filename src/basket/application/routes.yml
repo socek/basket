@@ -1,0 +1,18 @@
+games:
+    controllers:
+        -
+            controller: GameListController
+            route: games:list
+            url: /
+        -
+            controller: GameActiveListController
+            route: games:active_list
+            url: /active
+        -
+            controller: GroupAController
+            route: games:group_a
+            url: /group_a
+        -
+            controller: GroupBController
+            route: games:group_b
+            url: /group_b

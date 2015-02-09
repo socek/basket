@@ -1,0 +1,48 @@
+{{static.add_js_link('/js/plugins/dataTables/jquery.dataTables.js')}}
+{{static.add_js_link('/js/plugins/dataTables/dataTables.bootstrap.js')}}
+
+{% macro table(title, header, objects, id) -%}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                {% if title -%}
+                    <div class="panel-heading">{{title()}}</div>
+                {%- endif %}
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table id="{{id}}" class="table table-striped table-bordered table-hover">
+                            <thead>
+                                {{header()}}
+                            </thead>
+
+                            <tfoot>
+                                {{header()}}
+                            </tfoot>
+
+                            <tbody>
+                                {% for obj in objects %}
+                                    {{caller(obj, loop.revindex)}}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- endmacro %}
+
+
+{% macro jsinit(id, bFilter="true", order=None) %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#{{id}}').dataTable({
+                "paging":   false,
+                "bFilter": {{bFilter}}
+                {%- if order %},
+                    "order": "{{order}}"
+                {% endif %}
+            });
+        });
+    </script>
+{% endmacro %}

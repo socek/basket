@@ -1,0 +1,57 @@
+{% extends "head.jinja2" %}
+{% block body %}
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button data-target=".navbar-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{route('games:list')}}">Memoriał Krystiana Michalskiego i Szymona Łysika (2015)</a>
+            </div>
+
+            <!-- Top Menu Items -->
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li>
+                            <a href="#">
+                                <div>{{user.name}}</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{{route('auth:logout')}}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            {{menu()}}
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">{% block page_head -%}
+                        Dashboard
+                    {%- endblock %}</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+
+            {{flashmsg()}}
+            {% block content %}{% endblock %}
+
+        </div>
+    </div>
+{% endblock %}

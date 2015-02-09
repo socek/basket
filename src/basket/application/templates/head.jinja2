@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% include "application/meta.jinja2" -%}
+        {{static.generate_css_links()}}
+        {% include "application/ie.jinja2" %}
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {{static.generate_js_links()}}
+        {{static.generate_js_codes()}}
+        {% block js %}{% endblock %}
+    </body>
+</html>

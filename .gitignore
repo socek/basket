@@ -46,3 +46,4 @@ local.py
 *.flag
 flags
 *.db
+data

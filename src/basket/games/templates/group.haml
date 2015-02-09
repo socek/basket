@@ -1,0 +1,38 @@
+-extends "main.jinja2"
+
+-block page_head
+  =group.name
+
+
+-block content
+  %table.scores
+    %tbody
+      %tr
+        %td.teamname
+          Drużyna
+        %td
+          Mecze
+        %td
+          Zwycięstw
+        %td
+          Punkty
+        %td
+          Małe Punkty
+      -for row in scores
+        %tr
+          %td.teamname
+            =row['name']
+          %td
+            =row['games']
+          %td
+            =row['wins']
+          %td
+            =row['score']
+          %td
+            =row['small score']
+
+  -for game in games
+    =game()
+
+
+
