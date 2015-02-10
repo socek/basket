@@ -23,5 +23,5 @@ class MenuWidget(Jinja2HelperSingle):
         submenu.add_child('Grane', 'games:active_list', None)
         submenu.add_child('Grupa A', 'games:group_a', None)
         submenu.add_child('Grupa B', 'games:group_b', None)
-        submenu.add_child('Finały', None, None)
-        submenu.add_child('Konkursy', None, None)
+        submenu.add_child('Finały', 'games:finals', None)
+        # submenu.add_child('Konkursy', None, None)

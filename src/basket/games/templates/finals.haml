@@ -1,0 +1,25 @@
+-extends "main.jinja2"
+
+-block page_head
+  =group.name
+
+
+-block content
+
+  %h3
+    Półfinał
+  =games[0]()
+  =games[1]()
+
+  %h3
+    Mecz o 3 miejsce
+  =games[2]()
+
+  %h3
+    Finał
+  =games[3]()
+
+
+
+
+

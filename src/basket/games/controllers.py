@@ -59,3 +59,15 @@ class GroupBController(GroupController):
 
     def get_group(self):
         return self.db.query(Group).filter(Group.name == 'Grupa B').one()
+
+
+class FinalsController(GroupController):
+    template = 'games:finals.haml'
+    menu_highlighted = 'games:finals'
+
+    def make(self):
+        self.data['group'] = self.group = self.get_group()
+        self.data['games'] = list(self.get_game_widgets())
+
+    def get_group(self):
+        return self.db.query(Group).filter(Group.name == 'Finały').one()

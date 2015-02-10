@@ -16,3 +16,7 @@ games:
             controller: GroupBController
             route: games:group_b
             url: /group_b
+        -
+            controller: FinalsController
+            route: games:finals
+            url: /finals
