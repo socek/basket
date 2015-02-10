@@ -12,6 +12,7 @@ class GameListController(Controller):
 
     def make(self):
         self.data['games'] = self.get_game_widgets()
+        self.data['header_text'] = self.get_header()
 
     def get_game_widgets(self):
         for game in self.get_games():
@@ -20,6 +21,9 @@ class GameListController(Controller):
     def get_games(self):
         return self.query(Game).order_by(Game.date)
 
+    def get_header(self):
+        return 'Wszystkie mecze'
+
 
 class GameActiveListController(GameListController):
 
@@ -27,6 +31,9 @@ class GameActiveListController(GameListController):
 
     def get_games(self):
         return super().get_games().filter(Game._status == 'running')
+
+    def get_header(self):
+        return 'Aktualnie rozgrywane mecze'
 
 
 class GroupController(Controller):
