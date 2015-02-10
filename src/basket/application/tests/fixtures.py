@@ -1,13 +1,15 @@
+from contextlib import closing
 from datetime import datetime
 from pytest import fixture
 
+from haplugin.sql import Base
 from haplugin.sql.fixtures import BaseFixtures
 
 from basket.auth.models import User
-from basket.teams.models import Team
-from basket.groups.models import Group
 from basket.games.models import Game
+from basket.groups.models import Group
 from basket.place.models import Place
+from basket.teams.models import Team
 
 
 class Fixtures(BaseFixtures):
@@ -15,13 +17,9 @@ class Fixtures(BaseFixtures):
         {
             'name': 'Socek',
             'email': 'msocek@gmail.com',
-            'password': (
-                '08d94068d7dd5f83ebb7b008250f904b188ba14ce41851bb779d92cf843db'
-                '12cdd43a17b2db8aeb2'
-            ),
+            'password': 'simplepass',
+            'permissions': [('base', 'view')]
         },
-        {'name': 'Darek'},
-        {'name': 'Marek'},
     ]
     T_PRZYJACIELE = "Przyjaciele Szymon"
     T_KKS = "KKS TG"
@@ -59,11 +57,20 @@ class Fixtures(BaseFixtures):
     ]
 
     def make_all(self):
-        self.create_dict(User, self.users)
+        self.create_users()
         self.create_dict(Team, self.teams)
         self.create_dict(Group, self.groups)
         self.create_dict(Place, self.places)
         self.create_games()
+
+    def create_users(self):
+        for userdata in self.users:
+            password = userdata.pop('password')
+            permissions = userdata.pop('permissions')
+            user = self._create(User, **userdata)
+            user.set_password(password)
+            for perm in permissions:
+                user.add_permission(self.db, *perm)
 
     def create_dict(self, cls, data):
         if 'name' in data[0]:
@@ -295,6 +302,12 @@ def fixtures(db, app):
 
 
 def create_fixtures(registry):
-    from basket.application.init import main
     db = registry['db']
+    engine = registry['db_engine']
+    with closing(engine.connect()) as con:
+        trans = con.begin()
+        for table in reversed(Base.metadata.sorted_tables):
+            con.execute(table.delete())
+        trans.commit()
+    from basket.application.init import main
     return Fixtures(db, main).create_all()
