@@ -18,7 +18,7 @@ class Fixtures(BaseFixtures):
             'name': 'Socek',
             'email': 'msocek@gmail.com',
             'password': 'simplepass',
-            'permissions': [('base', 'view')]
+            'permissions': [('base', 'view'), ('game', 'edit')]
         },
     ]
     T_PRZYJACIELE = "Przyjaciele Szymon"

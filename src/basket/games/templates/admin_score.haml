@@ -1,0 +1,38 @@
+-extends "main.jinja2"
+
+-block page_head
+  {{game.index + 1}}: {{ game.left_team.name }} - {{ game.right_team.name }}
+
+-block content
+  =form.begin()
+  =form.hidden('game_id')
+  =form.select('status')
+  %table.scores
+    %tbody
+      %tr
+        %td.teamname
+          Drużyna
+        %td
+          Kwarta 1
+        %td
+          Kwarta 2
+        %td
+          Kwarta 3
+        %td
+          Kwarta 4
+      %tr
+        %td.teamname
+          = game.left_team.name
+        -for index in range(4)
+          %td
+            =form.text('left_quart%d' %(index,))
+
+      %tr
+        %td.teamname
+          = game.right_team.name
+        -for index in range(4)
+          %td
+            =form.text('right_quart%d' %(index,))
+
+  =form.submit('Zapisz')
+  =form.end()

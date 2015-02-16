@@ -20,3 +20,12 @@ games:
             controller: FinalsController
             route: games:finals
             url: /finals
+    admin:
+        -
+            controller: AdminGameListController
+            route: games:admin_list
+            url: /admin
+        -
+            controller: GameEditScoreController
+            route: games:admin_score
+            url: /admin/score/{obj_id:\d+}

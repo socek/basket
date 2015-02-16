@@ -15,6 +15,12 @@ class StatusBased(object):
         'ended'
     ]
 
+    labels = {
+        'not started': 'Nie rozpoczęto',
+        'running': 'Trwa',
+        'ended': 'Zakończony',
+    }
+
     def _get_status(self):
         return self._status
 
