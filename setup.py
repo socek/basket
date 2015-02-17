@@ -22,6 +22,7 @@ install_requires = [
     'hatak_auth>=0.2.2.1',
     'ipdb',
     'psycopg2',
+    'formskit>=0.5.4.3',
 ]
 dependency_links = [
 

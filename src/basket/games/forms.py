@@ -1,39 +1,9 @@
-import re
-from formskit.validators import FieldValidator
-from formskit.converters import FakeConvert
+from formskit.validators import IsDigit
+from formskit.converters import ToInt
 
 from haplugin.formskit import PostForm
 
 from .models import Game, StatusBased
-
-
-class IsDigit(FieldValidator):
-
-    """Will fail if value is not a digit."""
-
-    regex = re.compile('^-{0,1}[0-9]+$')
-
-    def validate_value(self):
-        if not self.value:
-            return True
-        return re.search(self.regex, self.value) is not None
-
-
-class ToInt(FakeConvert):
-
-    """Converts to int."""
-
-    def convert(self, value):
-        try:
-            return int(value)
-        except ValueError:
-            return None
-
-    def convert_back(self, value):
-        if value is None:
-            return None
-        else:
-            return str(value)
 
 
 class EditScoreFormData(dict):
@@ -134,23 +104,3 @@ class EditScoreForm(PostForm):
 
     def get_game(self, id_):
         return self.query(Game).filter_by(id=id_).one()
-
-    def generate_scalars_from_game(self, game):
-        left_score = 0
-        right_score = 0
-        for index in range(4):
-            try:
-                left = game.quarts[index].left_score + left_score
-            except TypeError:
-                left = None
-
-            try:
-                right = game.quarts[index].right_score + right_score
-            except TypeError:
-                right = None
-
-            yield index, left, right
-            if left:
-                left_score = left
-            if right:
-                right_score = right

@@ -1,52 +1,64 @@
-from haplugin.toster import TestCase
-from mock import MagicMock
+from pytest import fixture, yield_fixture
+from mock import MagicMock, patch
 
 from ..helpers import MenuWidget
 from ..plugin import MenuPlugin, MenuControllerPlugin
 
 
-class MenuPluginTests(TestCase):
+class TestsMenuPlugin(object):
     prefix_from = MenuPlugin
 
-    def setUp(self):
-        super().setUp()
-        self.plugin = self.prefix_from()
+    @fixture
+    def plugin(self):
+        return MenuPlugin()
 
-    def test_add_controller_plugins(self):
-        """add_controller_plugins should add MenuControllerPlugin to plugins"""
-        self.add_mock_object(self.plugin, 'add_controller_plugin')
+    def test_add_controller_plugins(self, plugin):
+        """
+        add_controller_plugins should add MenuControllerPlugin to plugins
+        """
+        with patch.object(plugin, 'add_controller_plugin') as mock:
+            plugin.add_controller_plugins()
 
-        self.plugin.add_controller_plugins()
-
-        self.mocks['add_controller_plugin'].assert_called_once_with(
-            MenuControllerPlugin)
+            mock.assert_called_once_with(MenuControllerPlugin)
 
 
-class MenuControllerPluginTests(TestCase):
-    prefix_from = MenuControllerPlugin
+class TestMenuControllerPlugin(object):
 
-    def setUp(self):
-        super().setUp()
-        self.controller = MagicMock()
-        self.parent = MagicMock()
-        self.plugin = self.prefix_from(self.parent, self.controller)
+    @fixture
+    def controller(self):
+        return MagicMock()
 
-    def test_make_helpers_success(self):
-        """make_helpers should add MenuWidget to helpers if
-        controller.menu_highlighted is specyfied."""
-        self.add_mock_object(self.plugin, 'add_helper')
-        self.controller.menu_highlighted = 'something'
+    @fixture
+    def parent(self):
+        return MagicMock()
 
-        self.plugin.make_helpers()
+    @fixture
+    def plugin(self, controller, parent):
+        return MenuControllerPlugin(parent, controller)
 
-        self.mocks['add_helper'].assert_called_once_with(
-            'menu', MenuWidget, 'something')
+    @yield_fixture
+    def add_helper(self, plugin):
+        with patch.object(plugin, 'add_helper') as mock:
+            yield mock
 
-    def test_make_helpers_fail(self):
-        """make_helpers should do nothing if controller.menu_highlighted is not
-        specyfied."""
-        self.add_mock_object(self.plugin, 'add_helper')
-        del(self.controller.menu_highlighted)
+    def test_make_helpers_success(self, plugin, add_helper, controller):
+        """
+        make_helpers should add MenuWidget to helpers if
+        controller.menu_highlighted is specyfied.
+        """
+        controller.menu_highlighted = 'something'
 
-        self.plugin.make_helpers()
-        self.assertEqual(0, self.mocks['add_helper'].call_count)
+        plugin.make_helpers()
+
+        add_helper.assert_called_once_with('menu', MenuWidget, 'something')
+
+    def test_make_helpers_fail(self, plugin, add_helper, controller):
+        """
+        make_helpers should do nothing if controller.menu_highlighted is not
+        specyfied.
+        """
+        del(controller.menu_highlighted)
+
+        plugin.make_helpers()
+
+        assert add_helper.called is False
