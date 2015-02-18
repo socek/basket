@@ -1,31 +1,34 @@
-from haplugin.toster import TestCase
+from pytest import fixture
+from mock import patch
+
+from hatak.testing import RequestFixture
+
 from ..helpers import MenuWidget
 
 
-class MenuWidgetTests(TestCase):
-    prefix_from = MenuWidget
+class TestMenuWidget(RequestFixture):
 
-    def setUp(self):
-        super().setUp()
-        self.highlited = 'highlited'
-        self.widget = self.prefix_from(self.request, self.highlited)
-        self.widget.data = {'menu': []}
+    @fixture
+    def widget(self, request):
+        widget = MenuWidget(request, 'highlited')
+        widget.data = {'menu': []}
+        widget.registry = request.registry
+        return widget
 
-    def test_init(self):
-        self.assertEqual(self.highlited, self.widget.highlighted)
+    def test_init(self, widget):
+        assert widget.highlighted == 'highlited'
 
-    def test_add_menu(self):
-        """add_menu should create MenuObject and append it to the .data['menu']
+    def test_add_menu(self, widget):
         """
-        self.add_mock('MenuObject', auto_spec=True)
-        result = self.widget.add_menu('arg')
+        add_menu should create MenuObject and append it to the .data['menu']
+        """
+        with patch('basket.menu.helpers.MenuObject', auto_spec=True) as mock:
+            result = widget.add_menu('arg')
 
-        self.assertEqual(self.mocks['MenuObject'].return_value, result)
-        self.mocks['MenuObject'].assert_called_once_with(self.widget, 'arg')
-        self.assertEqual(
-            [result],
-            self.widget.data['menu'])
+            assert result == mock.return_value
+            mock.assert_called_once_with(widget, 'arg')
+            assert widget.data['menu'] == [result]
 
-    def test_make(self):
+    def test_make(self, widget):
         """Sanity check."""
-        self.widget.make()
+        widget.make()

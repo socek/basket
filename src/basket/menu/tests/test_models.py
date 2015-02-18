@@ -1,77 +1,91 @@
-from mock import MagicMock
-from haplugin.toster import TestCase
+from pytest import fixture
+from mock import MagicMock, patch
 
 from ..models import MenuObject
 
 
-class MenuObjectTests(TestCase):
-    prefix_from = MenuObject
+class TestMenuObject(object):
 
-    def setUp(self):
-        super().setUp()
-        self.widget = MagicMock()
-        self.widget.request = self.request
-        self.name = 'name'
-        self.rotue = 'route'
-        self.icon = 'icon'
-        self.model = MenuObject(self.widget, self.name, self.route, self.icon)
+    @fixture
+    def request(self):
+        return MagicMock()
 
-    def test_init(self):
-        self.assertEqual(self.widget, self.model.widget)
-        self.assertEqual(self.request, self.model.request)
-        self.assertEqual(self.session, self.model.session)
-        self.assertEqual(self.widget.highlighted, self.model.highlighted)
-        self.assertEqual(self.name, self.model.name)
-        self.assertEqual(self.route, self.model.route)
-        self.assertEqual(self.icon, self.model.icon)
-        self.assertEqual([], self.model.childs)
+    @fixture
+    def widget(self, request):
+        widget = MagicMock()
+        widget.request = request
+        return widget
 
-    def test_get_url_success(self):
-        """get_url should return route path if specyfied"""
-        self.assertEqual(
-            self.request.route_path.return_value,
-            self.model.get_url())
+    @fixture
+    def inits(self):
+        return ('name', 'route', 'icon')
 
-        self.request.route_path.assert_called_once_with(self.model.route)
+    @fixture
+    def model(self, widget, inits):
+        return MenuObject(widget, *inits)
 
-    def test_get_url_fail(self):
-        """get_url should return '#' if route not specyfied"""
-        self.model.route = None
+    def test_init(self, model, widget, request, inits):
+        assert model.widget is widget
+        assert model.request is request
+        assert model.session is request.session
+        assert model.highlighted is widget.highlighted
+        assert model.name is inits[0]
+        assert model.route is inits[1]
+        assert model.icon is inits[2]
+        assert model.childs == []
 
-        self.assertEqual('#', self.model.get_url())
-
-    def test_is_highlited(self):
-        """is_highlited should return True if self.route is poting where
-        Menu.highlighted"""
-        self.model.highlighted = 'route'
-        self.model.route = 'route'
-        self.assertEqual(True, self.model.is_highlited())
-
-    def test_get_icon(self):
-        """get_icon should return class name describeing icon"""
-        self.assertEqual('fa-icon', self.model.get_icon())
-
-    def test_is_visible_success(self):
-        """is_visible should return has_access_to_route when the route is set
+    def test_get_url_success(self, request, model):
         """
-        result = self.model.is_visible()
-        self.assertEqual(
-            self.request.user.has_access_to_route.return_value,
-            result)
-        self.request.user.has_access_to_route.assert_called_once_with(
-            self.model.route)
+        .get_url should return route path if specyfied
+        """
+        assert model.get_url() is request.route_path.return_value
 
-    def test_is_visible_fail(self):
-        """is_visible should return True if no route specyfied"""
-        self.model.route = None
-        self.assertEqual(True, self.model.is_visible())
+        request.route_path.assert_called_once_with(model.route)
 
-    def test_add_child(self):
-        """Should append MenuObject to MenuObject.childs."""
-        self.add_mock('MenuObject')
-        self.model.add_child('something', kw='arg')
+    def test_get_url_fail(self, request, model):
+        """
+        .get_url should return '#' if route not specyfied
+        """
+        model.route = None
 
-        self.assertEqual(
-            [self.mocks['MenuObject'].return_value], self.model.childs)
-        self.mocks['MenuObject'].assert_called_once_with(
-            self.model.widget, 'something', kw='arg')
+        assert model.get_url() == '#'
+
+    def test_is_highlited(self, request, model):
+        """
+        .is_highlited should return True if self.route is poting where
+        Menu.highlighted
+        """
+        model.highlighted = 'route'
+        model.route = 'route'
+        assert model.is_highlited() is True
+
+    def test_get_icon(self, request, model):
+        """
+        get_icon should return class name describeing icon
+        """
+        assert model.get_icon() == 'fa-icon'
+
+    def test_is_visible_success(self, request, model):
+        """
+        .is_visible should return has_access_to_route when the route is set
+        """
+        result = model.is_visible()
+        assert result is request.user.has_access_to_route.return_value
+        request.user.has_access_to_route.assert_called_once_with(model.route)
+
+    def test_is_visible_fail(self, request, model):
+        """
+        .is_visible should return True if no route specyfied
+        """
+        model.route = None
+        assert model.is_visible() is True
+
+    def test_add_child(self, request, model):
+        """
+        Should append MenuObject to MenuObject.childs.
+        """
+        with patch('basket.menu.models.MenuObject') as mock:
+            model.add_child('something', kw='arg')
+
+            assert model.childs == [mock.return_value]
+            mock.assert_called_once_with(model.widget, 'something', kw='arg')
