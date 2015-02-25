@@ -299,7 +299,7 @@ class Fixtures(BaseFixtures):
 
 class FixturesFixtures(DatabaseFixture):
 
-    @fixture(scope="session")
+    @fixture
     def fixtures(self, db, app):
         if 'fixtures' not in CACHE:
             print("Creating fixtures...")

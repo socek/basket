@@ -24,12 +24,11 @@ class TestAdminGameListController(ControllerFixture, FixturesFixtures):
 
             assert data['games'] == mock.return_value
 
-    def test_get_games(self, controller, fixtures, app, db):
+    def test_get_games(self, db, controller, fixtures, app):
         """
         .get_games should return all games
         """
         games = controller.get_games()
-
         assert len(fixtures['Game']) == len(games.all())
 
 
@@ -84,7 +83,7 @@ class TestGameEditScoreController(ControllerFixture, FixturesFixtures):
 
         assert controller.get_game_id() == 10
 
-    def test_get_game(self, controller, fixtures, matchdict):
+    def test_get_game(self, fixtures, controller, matchdict):
         """
         .get_game should return game with id pointed out by matchdict['obj_id']
         """

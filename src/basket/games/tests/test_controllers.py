@@ -69,7 +69,7 @@ class TestGameListController(ControllerFixture, FixturesFixtures):
         """
         assert controller.get_header() == 'Wszystkie mecze'
 
-    def test_get_games(self, controller, fixtures):
+    def test_get_games(self, fixtures, controller):
         """
         .get_games should return games in the order of Game.date
         """
@@ -84,7 +84,7 @@ class TestGameActiveListController(ControllerFixture, FixturesFixtures):
     def _get_controller_class(self):
         return GameActiveListController
 
-    def test_get_games(self, db, controller):
+    def test_get_games(self, db, controller, fixtures):
         """
         .get_games should return only actually running games
         """

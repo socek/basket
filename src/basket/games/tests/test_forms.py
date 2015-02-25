@@ -1,8 +1,10 @@
 from pytest import fixture
 
-from ..forms import EditScoreFormData, EditScoreGameData
+from hatak.testing import RequestFixture
+from basket.games.models import StatusBased
+from ..forms import EditScoreFormData, EditScoreGameData, EditScoreForm
 from ..models import Game, Quart
-
+from basket.application.tests.fixtures import FixturesFixtures
 
 class EditScoreFormDataFixtures(object):
 
@@ -156,3 +158,19 @@ class TestEditScoreGameData(EditScoreGameDataFixtures):
         assert index == 3
         assert left == 11
         assert right is None
+
+
+class TestEditScoreFormMain(FixturesFixtures):
+
+    @fixture
+    def form(self, request):
+        return EditScoreForm(request)
+
+    def test_generate_statuses(self, form):
+        data = list(form.generate_statuses())
+        for index, status in enumerate(StatusBased._avalible_statuses):
+            label = StatusBased.labels[status]
+            assert data[index] == {
+                'label': label,
+                'value': status,
+            }
