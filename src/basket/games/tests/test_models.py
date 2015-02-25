@@ -1,9 +1,8 @@
 from pytest import fixture, raises, yield_fixture
 from mock import MagicMock, patch, call
 
-from haplugin.sql.testing import DatabaseFixture
-
 from ..models import StatusBased, Game, Quart
+from basket.application.tests.fixtures import FixturesFixtures
 
 
 class TestStatusBased(object):
@@ -37,7 +36,7 @@ class TestStatusBased(object):
             status.status = 'wrong value'
 
 
-class TestGameCreation(DatabaseFixture):
+class TestGameCreation(FixturesFixtures):
 
     @fixture
     def game(self):
@@ -59,7 +58,7 @@ class TestGameCreation(DatabaseFixture):
         with patcher as mock:
             yield mock
 
-    def test_create_dependencies(self, game, db, fixtures):
+    def test_create_dependencies(self, game, db, fixtures, app):
         """
         .create_dependencies should create missing quarts.
         """

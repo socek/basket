@@ -1,4 +1,4 @@
-from hatak.controller import Controller, EndController, HTTPFound
+from hatak.controller import Controller
 
 from .models import Game
 from .forms import EditScoreForm
@@ -34,9 +34,3 @@ class GameEditScoreController(Controller):
 
     def get_game_id(self):
         return int(self.matchdict['obj_id'])
-
-    def redirect(self, to, end=False, **kwargs):
-        url = self.request.route_url(to, **kwargs)
-        self.response = HTTPFound(location=url)
-        if end:
-            raise EndController(self.response)

@@ -1,5 +1,4 @@
 from pytest import fixture
-from mock import create_autospec
 
 from ..forms import EditScoreFormData, EditScoreGameData
 from ..models import Game, Quart

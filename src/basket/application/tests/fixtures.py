@@ -2,8 +2,10 @@ from contextlib import closing
 from datetime import datetime
 from pytest import fixture
 
+from hatak import _test_cache as CACHE
 from haplugin.sql import Base
 from haplugin.sql.fixtures import BaseFixtures
+from haplugin.sql.testing import DatabaseFixture
 
 from basket.auth.models import User
 from basket.games.models import Game
@@ -295,10 +297,14 @@ class Fixtures(BaseFixtures):
         obj.add_to_db_session(self.db)
 
 
-@fixture(scope="session")
-def fixtures(db, app):
-    print("Creating fixtures...")
-    return Fixtures(db, app).create_all()
+class FixturesFixtures(DatabaseFixture):
+
+    @fixture(scope="session")
+    def fixtures(self, db, app):
+        if 'fixtures' not in CACHE:
+            print("Creating fixtures...")
+            CACHE['fixtures'] = Fixtures(db, app).create_all()
+        return CACHE['fixtures']
 
 
 def create_fixtures(registry):
