@@ -58,14 +58,13 @@ class TestGameCreation(FixturesFixtures):
         with patcher as mock:
             yield mock
 
-    def test_create_dependencies(self, game, db, fixtures, app):
-        """
-        .create_dependencies should create missing quarts.
-        """
+    @yield_fixture
+    def dbgame(self, game, db, fixtures):
         game.left_team = fixtures['Team']['Przyjaciele Szymon']
         game.right_team = fixtures['Team']['TG Team']
         game.index = 10
         game.group = fixtures['Group']['Grupa A']
+        game.place = fixtures['Place']['Hala Sportowa Tarnowskie Góry']
         quart = Quart()
         quart.index = 2
         quart.game = game
@@ -75,18 +74,21 @@ class TestGameCreation(FixturesFixtures):
 
         game.add_to_db_session(db)
         db.commit()
+        try:
+            yield game
+        finally:
+            game.delete(db)
+            db.commit()
 
-        assert game.quarts[0].index == 0
-
-        assert game.quarts[1].index == 1
-
-        assert game.quarts[2].index == 2
-        assert game.quarts[2].left_score == 10
-
-        assert game.quarts[3].index == 3
-
-        game.delete(db)
-        db.commit()
+    def test_create_dependencies(self, dbgame):
+        """
+        .create_dependencies should create missing quarts.
+        """
+        assert dbgame.quarts[0].index == 0
+        assert dbgame.quarts[1].index == 1
+        assert dbgame.quarts[2].index == 2
+        assert dbgame.quarts[2].left_score == 10
+        assert dbgame.quarts[3].index == 3
 
     def test_add_to_db_session(self, game, mdb, mcreate_dependencies):
         """
@@ -111,3 +113,25 @@ class TestGameCreation(FixturesFixtures):
 
         assert call(mquart) == mdb.delete.call_args_list[0]
         assert call(game) == mdb.delete.call_args_list[1]
+
+    def test_get_report(self, dbgame):
+        """
+        This test is for veryfing if the report is generated properly.
+        """
+        assert dbgame.get_report() == {
+            'date': None,
+            'group_name': 'Grupa A',
+            'index': 10,
+            'left': {
+                'quarts': [None, None, 10, None],
+                'sum': 10,
+                'team': 'Przyjaciele Szymon'
+            },
+            'place': 'Hala Sportowa Tarnowskie Góry',
+            'right': {
+                'quarts': [None, None, None, None],
+                'sum': 0,
+                'team': 'TG Team'
+            },
+            'status': 'not started'
+        }

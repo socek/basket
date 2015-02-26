@@ -1,10 +1,12 @@
-from pytest import fixture
+from pytest import fixture, yield_fixture
 
-from hatak.testing import RequestFixture
+from haplugin.sql.testing import TemporaryDatabaseObject
+
 from basket.games.models import StatusBased
 from ..forms import EditScoreFormData, EditScoreGameData, EditScoreForm
 from ..models import Game, Quart
 from basket.application.tests.fixtures import FixturesFixtures
+
 
 class EditScoreFormDataFixtures(object):
 
@@ -166,6 +168,17 @@ class TestEditScoreFormMain(FixturesFixtures):
     def form(self, request):
         return EditScoreForm(request)
 
+    @yield_fixture
+    def game(self, db, fixtures):
+        def prepare(game):
+            game.add_to_db_session(db)
+            game.left_team = fixtures['Team']['Przyjaciele Szymon']
+            game.right_team = fixtures['Team']['KKS TG']
+            game.group = fixtures['Group']['Grupa A']
+
+        with TemporaryDatabaseObject(db, Game, prepare) as game:
+            yield game
+
     def test_generate_statuses(self, form):
         data = list(form.generate_statuses())
         for index, status in enumerate(StatusBased._avalible_statuses):
@@ -174,3 +187,52 @@ class TestEditScoreFormMain(FixturesFixtures):
                 'label': label,
                 'value': status,
             }
+
+    def test_read_game(self, form):
+        """
+        .read_game should read from Game object and put the data into form
+        """
+        game = Game()
+        game.id = 3
+        game.status = 'running'
+        quarts = list(game.create_dependencies())
+        game.quarts = quarts
+        quarts[0].left_score = 10
+        quarts[1].right_score = 15
+
+        form.read_game(game)
+
+        data = form.get_data_dict(True)
+        data.pop('csrf_token')
+
+        assert data == {
+            'game_id': 3,
+            'left_quart0': 10,
+            'right_quart1': 15,
+            'status': 'running'
+        }
+
+    def test_on_success(self, game, db, form):
+        """
+        .on_success should put the data into game and flush the db
+        """
+        form.read_game(game)
+
+        form.set_value('status', 'running')
+        form.set_value('left_quart0', 10)
+        form.set_value('right_quart0', '')
+        form.set_value('left_quart1', '')
+        form.set_value('right_quart1', 15)
+        form.set_value('left_quart2', '')
+        form.set_value('right_quart2', '')
+        form.set_value('left_quart3', '')
+        form.set_value('right_quart3', '')
+
+        form.on_success()
+
+        db.refresh(game)
+
+        assert game.status == 'running'
+        assert game.quarts[0].left_score == 10
+        assert game.quarts[0].right_score is None
+        assert game.quarts[1].right_score == 15

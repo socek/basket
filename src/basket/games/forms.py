@@ -38,7 +38,7 @@ class EditScoreGameData(object):
         name = '%s_score' % (side,)
         try:
             return getattr(self.game.quarts[index], name) + overal_score
-        except TypeError:
+        except (TypeError, IndexError):
             return None
 
     def generate_scores(self):
@@ -83,8 +83,8 @@ class EditScoreForm(PostForm):
     def read_game(self, game):
         self.set_value('game_id', game.id, force=True)
         self.set_value('status', game.status)
-        game = EditScoreGameData(game)
-        for index, left, right in game.generate_scores():
+        scores = EditScoreGameData(game)
+        for index, left, right in scores.generate_scores():
             if left:
                 self.set_value('left_quart%d' % (index,), left)
             if right:
