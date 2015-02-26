@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'hatak==0.2.7.3',
+    'hatak==0.2.7.4',
     'coverage',
     'hatak_logging',
     'hatak_jinja2',
