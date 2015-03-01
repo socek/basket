@@ -62,3 +62,4 @@ def make_settings(settings, paths):
     ]
 
     settings['auth_redirect'] = 'games:list'
+    settings['fixtures'] = 'basket.application.tests.fixtures:Fixtures'
