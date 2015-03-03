@@ -1,0 +1,15 @@
+-extends "main.jinja2"
+
+-block page_head
+  {{game.index + 1}}: {{ game.left_team.name }} - {{ game.right_team.name }}
+
+-block content
+  =form.begin()
+  =form.hidden('game_id')
+  =form.select('left_team_id')
+  =form.select('right_team_id')
+  =form.select('group_id')
+  =form.select('place_id')
+
+  =form.submit('Zapisz')
+  =form.end()

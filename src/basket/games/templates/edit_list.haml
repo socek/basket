@@ -1,11 +1,11 @@
 -extends "main.jinja2"
 
 -block page_head
-  Wszystkie mecze
+  = header
 
 
 -block content
   %ul
     -for game in games
-      %li -> %a href="{{ route('games:admin_score', obj_id=game.id) }}"
+      %li -> %a href="{{ route(url_name, obj_id=game.id) }}"
         {{game.index + 1}}: {{ game.left_team.name }} - {{ game.right_team.name }}

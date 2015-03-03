@@ -1,4 +1,6 @@
 from haplugin.jinja2 import Jinja2HelperSingle
+from haplugin.formskit.helpers import FormWidget
+from jinja2.exceptions import TemplateNotFound
 
 
 def has_access_to_route(route):
@@ -55,3 +57,22 @@ class GameWidget(Jinja2HelperSingle):
 
         data['group'] = self.report['group_name']
         return '<div class="tabel %(cls)s">%(group)s</div>' % data
+
+
+class ScoreFormWidget(FormWidget):
+
+    prefix = 'basket.games:templates/forms'
+
+    def render_for(self, name, data):
+        self.generate_data()
+        self.data.update(data)
+        try:
+            return self.render(self.get_template(name, self.prefix))
+        except TemplateNotFound:
+            return self.render(self.get_template(name, super().prefix))
+
+    def render(self, template_name):
+        from jinja2 import Markup
+        env = self.registry['jinja2']
+        template = env.get_template(template_name)
+        return Markup(template.render(**self.data))

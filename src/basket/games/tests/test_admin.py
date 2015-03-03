@@ -6,6 +6,7 @@ from basket.application.tests.fixtures import FixturesFixtures
 
 from ..forms import EditScoreForm
 from ..admin import AdminGameListController, GameEditScoreController
+from ..widgets import ScoreFormWidget
 
 
 class TestAdminGameListController(ControllerFixture, FixturesFixtures):
@@ -52,7 +53,7 @@ class TestGameEditScoreController(ControllerFixture, FixturesFixtures):
         controller.make()
 
         assert data['game'] == get_game.return_value
-        add_form.assert_called_once_with(EditScoreForm)
+        add_form.assert_called_once_with(EditScoreForm, widget=ScoreFormWidget)
         form.validate.assert_called_once_with()
         form.read_game.assert_called_once_with(get_game.return_value)
         assert redirect.called is False

@@ -26,6 +26,14 @@ games:
             route: games:admin_list
             url: /admin
         -
+            controller: GameEditController
+            route: games:admin
+            url: /admin/{obj_id:\d+}
+        -
             controller: GameEditScoreController
             route: games:admin_score
             url: /admin/score/{obj_id:\d+}
+        -
+            controller: AdminGameListScoreController
+            route: games:admin_score_list
+            url: /admin/games/scores
