@@ -7,7 +7,7 @@ install_requires = [
     'hatak_logging',
     'hatak_jinja2',
     'hatak_haml',
-    'hatak_sql>=0.1.8',
+    'hatak_sql>=0.1.9',
     'hatak_alembic>=0.1.2',
     'hatak_beaker',
     'hatak_debugtoolbar',
@@ -30,7 +30,7 @@ dependency_links = [
 
 if __name__ == '__main__':
     setup(name='Basket',
-          version='0.1',
+          version='0.1.1',
           packages=find_packages('src'),
           package_dir={'': 'src'},
           install_requires=install_requires,
