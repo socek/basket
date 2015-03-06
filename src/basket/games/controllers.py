@@ -50,7 +50,7 @@ class GroupController(Controller):
             yield GameWidget(self.request, game)
 
     def get_games(self):
-        return self.group.games.order_by(Game.index)
+        return self.group.games
 
 
 class GroupAController(GroupController):

@@ -1,6 +1,6 @@
 from haplugin.sql import Base
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 from basket.teams.models import Team
 from basket.groups.models import Group
@@ -48,7 +48,9 @@ class Game(Base, StatusBased):
     right_team = relationship(Team, primaryjoin=right_team_id == Team.id)
 
     group_id = Column(Integer, ForeignKey('groups.id'), nullable=False)
-    group = relationship(Group, backref="games")
+    group = relationship(
+        Group,
+        backref=backref('games', order_by=index))
 
     place_id = Column(Integer, ForeignKey('places.id'))
     place = relationship(Place)
