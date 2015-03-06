@@ -76,7 +76,7 @@ class TestGameListController(ControllerFixture, FixturesFixtures):
         games = controller.get_games().all()
 
         assert games[0].id == fixtures['Game'][0].id
-        assert games[5].id == fixtures['Game'][3].id
+        assert games[5].id == fixtures['Game'][5].id
 
 
 class TestGameActiveListController(ControllerFixture, FixturesFixtures):

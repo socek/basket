@@ -19,7 +19,7 @@ class GameListController(Controller):
             yield GameWidget(self.request, game)
 
     def get_games(self):
-        return self.query(Game).order_by(Game.date)
+        return self.query(Game).order_by(Game.index)
 
     def get_header(self):
         return 'Wszystkie mecze'
