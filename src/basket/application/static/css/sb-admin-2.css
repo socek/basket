@@ -423,6 +423,9 @@ div.match div.pub_date.red {
     background-color: #e65f0e;
         color:#fff;
 }
+div.match span.hour {
+    color: red;
+}
 div.match div.pub_date.grey {
     background-color: grey;
         color:#fff;
@@ -495,6 +498,4 @@ table.scores td {
 }
 table.scores td.teamname {
     width: 220px;
-
-
 }

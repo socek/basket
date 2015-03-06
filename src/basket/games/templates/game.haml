@@ -4,7 +4,9 @@
   %div.place
     = report['place']
   %div.place
-    = report['date']
+    = report['date'].strftime('%d.%m.%Y ')
+    %span.hour
+      = report['date'].strftime('%H:%M')
 
   = group() | safe
 
