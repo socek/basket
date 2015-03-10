@@ -84,7 +84,7 @@ class TestGameActiveListController(ControllerFixture, FixturesFixtures):
     def _get_controller_class(self):
         return GameActiveListController
 
-    def test_get_games(self, db, controller, fixtures):
+    def test_get_games(self, fixtures, db, controller):
         """
         .get_games should return only actually running games
         """

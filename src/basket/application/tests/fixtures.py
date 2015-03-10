@@ -6,12 +6,14 @@ from hatak import _test_cache as CACHE
 from haplugin.sql import Base
 from haplugin.sql.fixtures import BaseFixtures
 from haplugin.sql.testing import DatabaseFixture
+from haplugin.driver.plugin import Driver
 
 from basket.auth.models import User
 from basket.games.models import Game
 from basket.groups.models import Group
 from basket.place.models import Place
 from basket.teams.models import Team
+from basket.application.init import drivers
 
 
 class Fixtures(BaseFixtures):
@@ -57,6 +59,12 @@ class Fixtures(BaseFixtures):
         {'name': P_TG},
         {'name': P_RADZIONKOW},
     ]
+
+    def __init__(self, db, application):
+        super().__init__(db, application)
+        self.driver = Driver(db)
+        for group in drivers.groups:
+            self.driver.add_group(group)
 
     def make_all(self):
         self.create_users()
@@ -293,14 +301,21 @@ class Fixtures(BaseFixtures):
         )
 
     def _create_game(self, **kwargs):
-        obj = self._create_nameless(Game, **kwargs)
-        obj.add_to_db_session(self.db)
+        obj = self.driver.Game.create(**kwargs)
+        self._add_nameless_object_to_fixtures(obj)
 
 
 class FixturesFixtures(DatabaseFixture):
 
     @fixture
-    def fixtures(self, db, app):
+    def driver(self, request):
+        request.driver = Driver(request.db)
+        for group in drivers.groups:
+            request.driver.add_group(group)
+        return request.driver
+
+    @fixture
+    def fixtures(self, db, app, driver):
         if 'fixtures' not in CACHE:
             print("Creating fixtures...")
             CACHE['fixtures'] = Fixtures(db, app).create_all()
