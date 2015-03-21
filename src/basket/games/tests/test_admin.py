@@ -2,14 +2,14 @@ from mock import patch
 from pytest import yield_fixture
 
 from hatak.testing import ControllerFixture
-from basket.application.tests.fixtures import FixturesFixtures
+from haplugin.sql.testing import DatabaseFixture
 
 from ..forms import EditScoreForm
 from ..admin import AdminGameListController, GameEditScoreController
 from ..widgets import ScoreFormWidget
 
 
-class TestAdminGameListController(ControllerFixture, FixturesFixtures):
+class TestAdminGameListController(ControllerFixture, DatabaseFixture):
 
     def _get_controller_class(self):
         return AdminGameListController
@@ -33,7 +33,7 @@ class TestAdminGameListController(ControllerFixture, FixturesFixtures):
         assert len(fixtures['Game']) == len(games.all())
 
 
-class TestGameEditScoreController(ControllerFixture, FixturesFixtures):
+class TestGameEditScoreController(ControllerFixture, DatabaseFixture):
 
     def _get_controller_class(self):
         return GameEditScoreController

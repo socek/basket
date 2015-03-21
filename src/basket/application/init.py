@@ -14,12 +14,12 @@ from haplugin.formskit import FormPlugin
 from haplugin.flashmsg import FlashMessagePlugin
 
 # Drivers
-from haplugin.driver.plugin import DriverPlugin
+from basket.application.tests.fixtures import Fixtures
 from basket.games.driver import GameDriver
 from basket.groups.driver import GroupDriver
-drivers = DriverPlugin()
-drivers.add_group(GameDriver())
-drivers.add_group(GroupDriver())
+sql = SqlPlugin(Fixtures)
+sql.add_group(GameDriver())
+sql.add_group(GroupDriver())
 
 # Internal plugins
 from basket.menu.plugin import MenuPlugin
@@ -32,7 +32,7 @@ main = Application('basket', make_routes)
 main.add_plugin(LoggingPlugin())
 main.add_plugin(Jinja2Plugin())
 main.add_plugin(HamlPlugin())
-main.add_plugin(SqlPlugin())
+main.add_plugin(sql)
 main.add_plugin(AlembicPlugin())
 main.add_plugin(BeakerPlugin())
 main.add_plugin(DebugtoolbarPlugin())
@@ -41,4 +41,3 @@ main.add_plugin(AuthPlugin())
 main.add_plugin(FormPlugin(FormWidget))
 main.add_plugin(FlashMessagePlugin())
 main.add_plugin(MenuPlugin())
-main.add_plugin(drivers)

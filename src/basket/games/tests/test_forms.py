@@ -5,7 +5,7 @@ from haplugin.sql.testing import TemporaryDatabaseObject
 from basket.games.models import StatusBased
 from ..forms import EditScoreFormData, EditScoreGameData, EditScoreForm
 from ..models import Game, Quart
-from basket.application.tests.fixtures import FixturesFixtures
+from haplugin.sql.testing import DatabaseFixture
 
 
 class EditScoreFormDataFixtures(object):
@@ -162,7 +162,7 @@ class TestEditScoreGameData(EditScoreGameDataFixtures):
         assert right is None
 
 
-class TestEditScoreFormMain(FixturesFixtures):
+class TestEditScoreFormMain(DatabaseFixture):
 
     @fixture
     def form(self, request):

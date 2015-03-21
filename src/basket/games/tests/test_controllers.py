@@ -2,14 +2,14 @@ from mock import patch, MagicMock
 from pytest import yield_fixture
 
 from hatak.testing import ControllerFixture
-from basket.application.tests.fixtures import FixturesFixtures
+from haplugin.sql.testing import DatabaseFixture
 
 from ..models import Game
 from ..widgets import GameWidget
 from ..controllers import GameListController, GameActiveListController
 
 
-class TestGameListController(ControllerFixture, FixturesFixtures):
+class TestGameListController(ControllerFixture, DatabaseFixture):
 
     def _get_controller_class(self):
         return GameListController
@@ -79,7 +79,7 @@ class TestGameListController(ControllerFixture, FixturesFixtures):
         assert games[5].id == fixtures['Game'][5].id
 
 
-class TestGameActiveListController(ControllerFixture, FixturesFixtures):
+class TestGameActiveListController(ControllerFixture, DatabaseFixture):
 
     def _get_controller_class(self):
         return GameActiveListController

@@ -12,7 +12,6 @@ class TestMenuWidget(RequestFixture):
     def widget(self, request):
         widget = MenuWidget(request, 'highlited')
         widget.data = {'menu': []}
-        widget.registry = request.registry
         return widget
 
     def test_init(self, widget):

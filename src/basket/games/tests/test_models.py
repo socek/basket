@@ -2,7 +2,7 @@ from pytest import fixture, raises, yield_fixture
 from mock import MagicMock, patch, call
 
 from ..models import StatusBased, Game, Quart
-from basket.application.tests.fixtures import FixturesFixtures
+from haplugin.sql.testing import DatabaseFixture
 
 
 class TestStatusBased(object):
@@ -36,7 +36,7 @@ class TestStatusBased(object):
             status.status = 'wrong value'
 
 
-class TestGameCreation(FixturesFixtures):
+class TestGameCreation(DatabaseFixture):
 
     @fixture
     def game(self):
