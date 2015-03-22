@@ -1,21 +1,6 @@
-from haplugin.sql.driver import DriverGroup
+from haplugin.sql.driver import SqlDriver
 
 from .models import Game
-
-
-class SqlDriver(DriverGroup):
-
-    def get_by_id(self, id):
-        return self.get_all().filter_by(id=id).one()
-
-    def get_all(self):
-        return self.query(self.model)
-
-    def create(self, **kwargs):
-        obj = self.model()
-        for key, value in kwargs.items():
-            setattr(obj, key, value)
-        return obj
 
 
 class GameDriver(SqlDriver):

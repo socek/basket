@@ -1,4 +1,4 @@
-from basket.games.driver import SqlDriver
+from haplugin.sql.driver import SqlDriver
 
 from .models import Group
 
