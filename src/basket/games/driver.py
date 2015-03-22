@@ -1,4 +1,4 @@
-from haplugin.driver import DriverGroup
+from haplugin.sql.driver import DriverGroup
 
 from .models import Game
 
@@ -24,6 +24,9 @@ class GameDriver(SqlDriver):
 
     def get_all(self):
         return super().get_all().order_by(Game.index)
+
+    def get_all_order_by_date(self):
+        return super().get_all().order_by(Game.date)
 
     def get_running(self):
         return self.get_all().filter(Game._status == 'running')

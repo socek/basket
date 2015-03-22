@@ -106,7 +106,7 @@ class EditScoreForm(PostForm):
         self.db.commit()
 
     def get_game(self, id_):
-        return self.query(Game).filter_by(id=id_).one()
+        return self.driver.Game.get_by_id(id_)
 
 
 class EditGameForm(PostForm):
@@ -148,7 +148,7 @@ class EditGameForm(PostForm):
             }
 
     def get_teams(self):
-        return self.query(Team)
+        return self.driver.Team.get_all()
 
     def generate_groups(self):
         for group in self.get_groups():
@@ -158,7 +158,7 @@ class EditGameForm(PostForm):
             }
 
     def get_groups(self):
-        return self.query(Group)
+        return self.driver.Group.get_all()
 
     def generate_places(self):
         for place in self.get_places():
@@ -168,7 +168,7 @@ class EditGameForm(PostForm):
             }
 
     def get_places(self):
-        return self.query(Place)
+        return self.driver.Place.get_all()
 
     def on_success(self):
         data = self.get_data_dict(True)
@@ -181,4 +181,4 @@ class EditGameForm(PostForm):
         self.db.commit()
 
     def get_game(self, id_):
-        return self.query(Game).filter_by(id=id_).one()
+        return self.driver.Game.get_by_id(id_)

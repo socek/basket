@@ -2,7 +2,6 @@ from datetime import datetime
 
 from hatak.controller import Controller
 
-from .models import Game
 from .forms import EditScoreForm, EditGameForm
 from .widgets import ScoreFormWidget
 
@@ -18,7 +17,7 @@ class AdminGameListScoreController(Controller):
         self.data['header'] = self.get_header()
 
     def get_games(self):
-        return self.query(Game).order_by(Game.date)
+        return self.driver.Game.get_all_order_by_date()
 
     def get_edit_url_name(self):
         return 'games:admin_score'
@@ -30,7 +29,7 @@ class AdminGameListScoreController(Controller):
 class GameController(Controller):
 
     def get_game(self):
-        return self.query(Game).filter_by(id=self.get_game_id()).one()
+        return self.driver.Game.get_by_id(self.get_game_id())
 
     def get_game_id(self):
         return int(self.matchdict['obj_id'])

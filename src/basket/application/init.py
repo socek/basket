@@ -17,9 +17,13 @@ from haplugin.flashmsg import FlashMessagePlugin
 from basket.application.tests.fixtures import Fixtures
 from basket.games.driver import GameDriver
 from basket.groups.driver import GroupDriver
+from basket.teams.driver import TeamDriver
+from basket.place.driver import PlaceDriver
 sql = SqlPlugin(Fixtures)
 sql.add_group(GameDriver())
 sql.add_group(GroupDriver())
+sql.add_group(TeamDriver())
+sql.add_group(PlaceDriver())
 
 # Internal plugins
 from basket.menu.plugin import MenuPlugin
