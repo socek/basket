@@ -7,7 +7,7 @@ install_requires = [
     'hatak_logging',
     'hatak_jinja2',
     'hatak_haml',
-    'hatak_sql>=0.1.11',
+    'hatak_sql>=0.1.12',
     'hatak_alembic>=0.1.2',
     'hatak_beaker',
     'hatak_debugtoolbar',

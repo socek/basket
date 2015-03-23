@@ -70,11 +70,6 @@ class Game(Base, StatusBased):
             quart.game = self
             yield quart
 
-    def add_to_db_session(self, db):
-        for quart in self.create_dependencies():
-            db.add(quart)
-        db.add(self)
-
     def delete(self, db):
         for quart in self.quarts:
             db.delete(quart)

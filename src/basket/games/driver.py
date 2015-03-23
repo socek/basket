@@ -18,7 +18,10 @@ class GameDriver(SqlDriver):
 
     def create(self, **kwargs):
         obj = super().create(**kwargs)
-        for quart in obj.create_dependencies():
-            self.db.add(quart)
+        self._add_quarts(obj)
         self.db.add(obj)
         return obj
+
+    def _add_quarts(self, obj):
+        for quart in obj.create_dependencies():
+            self.db.add(quart)

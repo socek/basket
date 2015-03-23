@@ -72,7 +72,7 @@ class TestGameCreation(DatabaseFixture):
         db.add(quart)
         db.commit()
 
-        game.add_to_db_session(db)
+        self.driver.Game._add_quarts(game)
         db.commit()
         try:
             yield game
@@ -89,19 +89,6 @@ class TestGameCreation(DatabaseFixture):
         assert dbgame.quarts[2].index == 2
         assert dbgame.quarts[2].left_score == 10
         assert dbgame.quarts[3].index == 3
-
-    def test_add_to_db_session(self, game, mdb, mcreate_dependencies):
-        """
-        .add_to_db_session should add all quarts and itself to db
-        """
-        mquart = MagicMock()
-        mcreate_dependencies.return_value = [mquart]
-
-        game.add_to_db_session(mdb)
-
-        mcreate_dependencies.assert_called_once_with()
-        assert call(mquart) == mdb.add.call_args_list[0]
-        assert call(game) == mdb.add.call_args_list[1]
 
     def test_delete(self, game, mdb, mquarts):
         """

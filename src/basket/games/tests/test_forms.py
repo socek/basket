@@ -1,6 +1,6 @@
 from pytest import fixture, yield_fixture
 
-from haplugin.sql.testing import TemporaryDatabaseObject
+from haplugin.sql.testing import TemporaryDriverObject
 
 from basket.games.models import StatusBased
 from ..forms import EditScoreFormData, EditScoreGameData, EditScoreForm
@@ -171,12 +171,11 @@ class TestEditScoreFormMain(DatabaseFixture):
     @yield_fixture
     def game(self, db, fixtures):
         def prepare(game):
-            game.add_to_db_session(db)
             game.left_team = fixtures['Team']['Przyjaciele Szymon']
             game.right_team = fixtures['Team']['KKS TG']
             game.group = fixtures['Group']['Grupa A']
 
-        with TemporaryDatabaseObject(db, Game, prepare) as game:
+        with TemporaryDriverObject(self.driver.Game, prepare) as game:
             yield game
 
     def test_generate_statuses(self, form):
