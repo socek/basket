@@ -1,12 +1,10 @@
-from formskit.validators import IsDigit
+from formskit.field import AvalibleValue
+from formskit.validators import IsDigit, IsValueInAvalibleValues
 from formskit.converters import ToInt
 
 from haplugin.formskit import PostForm
 
-from .models import Game, StatusBased
-from basket.teams.models import Team
-from basket.groups.models import Group
-from basket.place.models import Place
+from .models import StatusBased
 
 
 class EditScoreFormData(dict):
@@ -114,20 +112,35 @@ class EditGameForm(PostForm):
     def create_form(self):
         self.add_field('game_id', ignore=True, convert=ToInt())
         field = self.add_field(
-            'left_team_id', label='Pierwsza drużyna', convert=ToInt())
-        field.data = self.generate_teams
+            'left_team_id',
+            label='Pierwsza drużyna',
+            convert=ToInt(),
+            validators=[IsValueInAvalibleValues(True)])
+        field.set_avalible_values(self.generate_teams)
 
         field = self.add_field(
-            'right_team_id', label='Druga drużyna', convert=ToInt())
-        field.data = self.generate_teams
+            'right_team_id',
+            label='Druga drużyna',
+            convert=ToInt(),
+            validators=[IsValueInAvalibleValues(True)]
+        )
+        field.set_avalible_values(self.generate_teams)
 
         field = self.add_field(
-            'group_id', label='Grupa', convert=ToInt())
-        field.data = self.generate_groups
+            'group_id',
+            label='Grupa',
+            convert=ToInt(),
+            validators=[IsValueInAvalibleValues()]
+        )
+        field.set_avalible_values(self.generate_groups)
 
         field = self.add_field(
-            'place_id', label='Miejsce', convert=ToInt())
-        field.data = self.generate_places
+            'place_id',
+            label='Miejsce',
+            convert=ToInt(),
+            validators=[IsValueInAvalibleValues()]
+        )
+        field.set_avalible_values(self.generate_places)
 
     def read_game(self, game):
         self.set_value('game_id', game.id, force=True)
@@ -137,35 +150,23 @@ class EditGameForm(PostForm):
         self.set_value('place_id', game.place_id)
 
     def generate_teams(self):
-        yield {
-            'label': '(brak)',
-            'value': '',
-        }
+        yield AvalibleValue('', '(brak)')
         for team in self.get_teams():
-            yield {
-                'label': team.name,
-                'value': team.id,
-            }
+            yield AvalibleValue(team.id, team.name)
 
     def get_teams(self):
         return self.driver.Team.get_all()
 
     def generate_groups(self):
         for group in self.get_groups():
-            yield {
-                'label': group.name,
-                'value': group.id,
-            }
+            yield AvalibleValue(group.id, group.name)
 
     def get_groups(self):
         return self.driver.Group.get_all()
 
     def generate_places(self):
         for place in self.get_places():
-            yield {
-                'label': place.name,
-                'value': place.id,
-            }
+            yield AvalibleValue(place.id, place.name)
 
     def get_places(self):
         return self.driver.Place.get_all()

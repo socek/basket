@@ -12,7 +12,7 @@ install_requires = [
     'hatak_beaker',
     'hatak_debugtoolbar',
     'hatak_statics',
-    'hatak_formskit',
+    'hatak_formskit>=0.2.3.2',
     'hatak_flashmsg',
     'waitress',
     'uwsgi',
@@ -22,7 +22,6 @@ install_requires = [
     'hatak_auth>=0.2.2.2',
     'ipdb',
     'psycopg2',
-    'formskit>=0.5.4.3',
 ]
 dependency_links = [
 
