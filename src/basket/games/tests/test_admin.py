@@ -1,15 +1,24 @@
 from mock import patch
-from pytest import yield_fixture
+from pytest import yield_fixture, fixture
 
 from hatak.testing import ControllerFixture
 from haplugin.sql.testing import DatabaseFixture
 
-from ..forms import EditScoreForm
+from ..forms import EditScoreForm, EditGameForm
 from ..admin import AdminGameListController, GameEditScoreController
+from ..admin import AdminGameListScoreController, GameEditController
 from ..widgets import ScoreFormWidget
 
 
-class TestAdminGameListController(ControllerFixture, DatabaseFixture):
+class LocalFixtures(ControllerFixture):
+
+    @yield_fixture
+    def get_game(self, controller):
+        with patch.object(controller, 'get_game', autospec=True) as mock:
+            yield mock
+
+
+class TestAdminGameListController(LocalFixtures, DatabaseFixture):
 
     def _get_controller_class(self):
         return AdminGameListController
@@ -33,15 +42,10 @@ class TestAdminGameListController(ControllerFixture, DatabaseFixture):
         assert len(fixtures['Game']) == len(games.all())
 
 
-class TestGameEditScoreController(ControllerFixture, DatabaseFixture):
+class TestGameEditScoreController(LocalFixtures, DatabaseFixture):
 
     def _get_controller_class(self):
         return GameEditScoreController
-
-    @yield_fixture
-    def get_game(self, controller):
-        with patch.object(controller, 'get_game', autospec=True) as mock:
-            yield mock
 
     def test_make(self, controller, data, get_game, add_form, redirect):
         """
@@ -94,3 +98,63 @@ class TestGameEditScoreController(ControllerFixture, DatabaseFixture):
         result = controller.get_game()
 
         assert result.id == game.id
+
+
+class TestAdminGameListScoreController(LocalFixtures, DatabaseFixture):
+
+    def _get_controller_class(self):
+        return AdminGameListScoreController
+
+    def test_get_edit_url_name(self, controller):
+        """
+        .get_edit_url_name should return url name of editing game.
+        """
+        assert controller.get_edit_url_name() == 'games:admin_score'
+
+    def test_get_header(self, controller):
+        """
+        .get_header should return label of header text
+        """
+        assert controller.get_header() == 'Edycja wyników'
+
+
+class TestGameEditController(LocalFixtures, DatabaseFixture):
+
+    @fixture
+    def add_flashmsg(self, request):
+        return request.add_flashmsg
+
+    def _get_controller_class(self):
+        return GameEditController
+
+    def test_make_on_no_submit(self, controller, get_game, data, add_form):
+        """
+        .make should put game in data and add form
+        """
+        form = add_form.return_value
+        form.validate.return_value = None
+
+        controller.make()
+
+        assert data['game'] == get_game.return_value
+        add_form.assert_called_once_with(EditGameForm)
+        form.read_game.assert_called_once_with(get_game.return_value)
+
+    def test_make_on_submit(
+            self,
+            controller,
+            get_game,
+            add_form,
+            add_flashmsg,
+            redirect):
+        """
+        .make should create flash message and redirect to games:admin_list
+        """
+        form = add_form.return_value
+        form.validate.return_value = True
+
+        controller.make()
+
+        form.validate.assert_called_once_with()
+        add_flashmsg.assert_called_once_with('Zapisano', 'info')
+        redirect.assert_called_once_with('games:admin_list')
